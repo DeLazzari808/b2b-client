@@ -37,11 +37,14 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 const socket: Socket = io(API_URL, {
   autoConnect: true,
   reconnection: true,
-  reconnectionAttempts: 5,
+  reconnectionAttempts: 10,
   reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,
+  timeout: 20000,
   transports: ['polling', 'websocket'], // Tenta polling primeiro (funciona melhor com ngrok)
   upgrade: true,
   forceNew: false,
+  withCredentials: false,
 });
 
 const useDebounce = (value: string, delay: number) => {
