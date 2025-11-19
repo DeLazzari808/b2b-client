@@ -41,10 +41,13 @@ const socket: Socket = io(API_URL, {
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
   timeout: 20000,
-  transports: ['polling', 'websocket'], // Tenta polling primeiro (funciona melhor com ngrok)
-  upgrade: true,
+  transports: ['polling'], // Força polling apenas (funciona melhor com ngrok)
+  upgrade: false, // Desabilita upgrade para websocket (ngrok free tem problemas)
   forceNew: false,
   withCredentials: false,
+  extraHeaders: {
+    'ngrok-skip-browser-warning': 'true', // Header para bypass do warning do ngrok
+  },
 });
 
 const useDebounce = (value: string, delay: number) => {
