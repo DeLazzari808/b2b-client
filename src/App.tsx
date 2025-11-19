@@ -88,19 +88,21 @@ function App() {
       setError('Desconectado do servidor. Tentando reconectar...');
     });
 
-    socket.on('connect_error', (error) => {
+    socket.on('connect_error', (error: any) => {
       console.error('❌ Erro de conexão:', error);
-      console.error('   - Tipo:', error.type);
-      console.error('   - Mensagem:', error.message);
+      console.error('   - Tipo:', error.type || 'unknown');
+      console.error('   - Mensagem:', error.message || error.toString());
       console.error('   - API URL:', API_URL);
       
+      const errorMessage = error.message || error.toString() || 'Erro desconhecido';
+      
       // Mensagens de erro mais específicas
-      if (error.message.includes('server error') || error.message.includes('xhr poll error')) {
+      if (errorMessage.includes('server error') || errorMessage.includes('xhr poll error')) {
         setError('Erro ao conectar ao servidor. O ngrok pode estar bloqueando requisições. Tente acessar a URL do ngrok diretamente no navegador primeiro.');
-      } else if (error.message.includes('timeout')) {
+      } else if (errorMessage.includes('timeout')) {
         setError('Timeout ao conectar. Verifique se o servidor está rodando e se o ngrok está ativo.');
       } else {
-        setError(`Erro ao conectar: ${error.message}. Verifique se o servidor está rodando na porta 3001.`);
+        setError(`Erro ao conectar: ${errorMessage}. Verifique se o servidor está rodando na porta 3001.`);
       }
     });
 
