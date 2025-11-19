@@ -37,6 +37,11 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 const socket: Socket = io(API_URL, {
   autoConnect: true,
   reconnection: true,
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000,
+  transports: ['polling', 'websocket'], // Tenta polling primeiro (funciona melhor com ngrok)
+  upgrade: true,
+  forceNew: false,
 });
 
 const useDebounce = (value: string, delay: number) => {
@@ -82,7 +87,18 @@ function App() {
 
     socket.on('connect_error', (error) => {
       console.error('❌ Erro de conexão:', error);
-      setError('Erro ao conectar ao servidor. Verifique se o servidor está rodando na porta 3001.');
+      console.error('   - Tipo:', error.type);
+      console.error('   - Mensagem:', error.message);
+      console.error('   - API URL:', API_URL);
+      
+      // Mensagens de erro mais específicas
+      if (error.message.includes('server error') || error.message.includes('xhr poll error')) {
+        setError('Erro ao conectar ao servidor. O ngrok pode estar bloqueando requisições. Tente acessar a URL do ngrok diretamente no navegador primeiro.');
+      } else if (error.message.includes('timeout')) {
+        setError('Timeout ao conectar. Verifique se o servidor está rodando e se o ngrok está ativo.');
+      } else {
+        setError(`Erro ao conectar: ${error.message}. Verifique se o servidor está rodando na porta 3001.`);
+      }
     });
 
     // Eventos do lobby

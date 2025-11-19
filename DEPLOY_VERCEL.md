@@ -44,7 +44,7 @@ vercel
 ```
 
 Quando perguntar sobre variáveis de ambiente:
-- `VITE_API_URL`: `https://527339fd873a.ngrok-free.app`
+- `VITE_API_URL`: `https://7e0dd36641ec.ngrok-free.app` (sua URL atual do ngrok)
 
 ## ⚠️ Importante sobre Ngrok
 
