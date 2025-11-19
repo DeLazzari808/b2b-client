@@ -49,10 +49,12 @@ export const useSpotifyPlayer = (accessToken: string | null) => {
     }
 
     function initializePlayer() {
+      if (!accessToken) return;
+      
       const player = new window.Spotify.Player({
         name: 'B2B Matchmaking Player',
         getOAuthToken: (cb: (token: string) => void) => {
-          cb(accessToken);
+          if (accessToken) cb(accessToken);
         },
         volume: 0.5,
       });
